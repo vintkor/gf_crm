@@ -11,7 +11,12 @@
         <div class="row no-gutters-">
             <div class="col-2">
                 <div class="list-group">
-                    <p class="list-group-item list-group-item-primary">{% trans 'Проекты' %}</p>
+                    <div class="list-group-item list-group-item-primary">
+                        <div class="row">
+                            <div class="col-11">{% trans 'Проекты' %}</div>
+                            <div class="col-1"><a href="#"><i class="fa fa-plus add-link"></i></a></div>
+                        </div>
+                    </div>
                     {% for project in projects %}
                         <a href="{% url 'project:load-milestones' project.id %}"
                            class="list-group-item project-loader loader_1 {% if current_project == project %}list-group-item-info{% endif %}"
@@ -27,7 +32,12 @@
             </div>
             <div class="col-2">
                 <div class="list-group milestones-container" style="display: {% if has_last_visited_task %}block{% else %}none{% endif %}">
-                    <p class="list-group-item list-group-item-primary">{% trans 'Майлстоуны' %}</p>
+                    <div class="list-group-item list-group-item-primary">
+                        <div class="row">
+                            <div class="col-11">{% trans 'Майлстоуны' %}</div>
+                            <div class="col-1"><a href="#" id="addMilestone"><i class="fa fa-plus add-link"></i></a></div>
+                        </div>
+                    </div>
                     <div id="milestones">
                         {% if has_last_visited_task %}
                             {% for milestone in milestones %}
@@ -47,7 +57,12 @@
             </div>
             <div class="col-2">
                 <div class="list-group modules-container" style="display: {% if has_last_visited_task %}block{% else %}none{% endif %}">
-                    <p class="list-group-item list-group-item-primary">{% trans 'Модули' %}</p>
+                    <div class="list-group-item list-group-item-primary">
+                        <div class="row">
+                            <div class="col-11">{% trans 'Модули' %}</div>
+                            <div class="col-1"><a href="#" id="addModule"><i class="fa fa-plus add-link"></i></a></div>
+                        </div>
+                    </div>
                     <div id="modules">
                         {% if has_last_visited_task %}
                             {% for module in modules %}
@@ -67,7 +82,12 @@
             </div>
             <div class="col-2">
                 <div class="list-group tasks-container" style="display: {% if has_last_visited_task %}block{% else %}none{% endif %}">
-                    <p class="list-group-item list-group-item-primary">{% trans 'Задачи' %}</p>
+                    <div class="list-group-item list-group-item-primary">
+                        <div class="row">
+                            <div class="col-11">{% trans 'Задачи' %}</div>
+                            <div class="col-1"><a href="{% url 'project:add-task' %}" id="addTask"><i class="fa fa-plus add-link"></i></a></div>
+                        </div>
+                    </div>
                     <div id="tasks">
                         {% if has_last_visited_task %}
                             {% for task in tasks %}

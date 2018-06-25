@@ -29,3 +29,10 @@
 .task-comments__comment-text {
   margin-top: 10px;
 }
+
+i.add-link {
+  color: #fff;
+  &:hover {
+    color: #5db45e;
+  }
+}

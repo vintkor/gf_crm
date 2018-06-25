@@ -77,6 +77,7 @@ $(document).ready(function(){
 
     });
 
+    // -------------------------- Добавления коммантария к задаче --------------------------
 
     $('body').on('click', '#addCommentToTask', function (e) {
        e.preventDefault();
@@ -95,6 +96,24 @@ $(document).ready(function(){
                console.log('error')
            }
        });
+
+    });
+
+    // -------------------------- Добавление задачи --------------------------
+
+    $('body').on('click', '#addTask', function (e) {
+        e.preventDefault();
+
+        $.ajax({
+            url: $(this).attr('href'),
+            success: function (response) {
+                $('#modalContent').html(response);
+                $('#myModal').modal('show');
+            },
+            error: function (e) {
+                console.log('error')
+            }
+        });
 
     });
 

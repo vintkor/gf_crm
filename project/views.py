@@ -125,3 +125,10 @@ class AddCommentView(View):
         }
 
         return render(request, 'project/_comment.html', context)
+
+
+class AddTaskView(View):
+
+    def get(self, request):
+        context = {}
+        return render(request, 'project/_add-task-modal.html', context)

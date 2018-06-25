@@ -77,4 +77,25 @@ $(document).ready(function(){
 
     });
 
+
+    $('body').on('click', '#addCommentToTask', function (e) {
+       e.preventDefault();
+
+       var form = $(this).parent('form');
+
+       $.ajax({
+           url: form.attr('action'),
+           data: form.serialize(),
+           method: 'post',
+           success: function (response) {
+               $('#addCommentContainer').html(response);
+               toastr.success('Комментарий успешно добавлен');
+           },
+           error: function (e) {
+               console.log('error')
+           }
+       });
+
+    });
+
 });

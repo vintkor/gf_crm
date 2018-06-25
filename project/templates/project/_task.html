@@ -1,4 +1,5 @@
 {% load i18n %}
+{% load project_tags %}
 
 <div class="card">
     <div class="card-header {% if task.is_completed %}is_completed{% elif task.is_on_verify %}is_on_verify{% else %}{% endif %}">
@@ -10,23 +11,11 @@
             <div class="task-comments">
                 <div class="task-comments__comments-list">
                     {% for comment in task.comment_set.all %}
-                        <div class="row">
-                            <div class="col-8 task-comments__comment-author">{{ comment.user }}</div>
-                            <div class="col-4 task-comments__comment-date">{{ comment.created }}</div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12 task-comments__comment-text">{{ comment.text|safe }}</div>
-                        </div>
-                        <hr>
+                        {% include 'project/_comment.html' with comment=comment %}
                     {% endfor %}
+                    <div id="addCommentContainer"></div>
                 </div>
-                <form action="" class="task-comments__add">
-                    {% csrf_token %}
-                    <div class="form-group">
-                        <textarea name="" id="" placeholder="{% trans 'Ваш комментарий' %}" class="form-control"></textarea>
-                    </div>
-                    <button class="btn btn-primary" id="addCommentToTask">{% trans 'Добавить коментарий' %}</button>
-                </form>
+                {% add_comment user task %}
             </div>
         </div>
     </div>

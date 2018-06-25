@@ -1,3 +1,6 @@
+import datetime
+
+from django.http import JsonResponse, HttpResponseBadRequest
 from django.shortcuts import render
 from django.views import View
 from django.views.generic import ListView
@@ -6,7 +9,8 @@ from .models import (
     Milestone,
     Module,
     Task,
-)
+    Comment)
+from django.utils.translation import ugettext as _
 
 
 class ProjectListView(ListView):
@@ -93,3 +97,31 @@ class SingleTaskLoaderView(View):
         }
 
         return render(request, 'project/_task.html', context)
+
+
+class AddCommentView(View):
+    """
+    Добавление коментария к задаче
+    """
+
+    def post(self, request, task_id):
+
+        try:
+            task = Task.objects.get(id=task_id)
+        except Task.DoesNotExist:
+            return HttpResponseBadRequest()
+
+        comment_text = request.POST.get('comment_text')
+
+        comment = Comment(
+            text=comment_text,
+            user=self.request.user,
+            task=task,
+        )
+        comment.save()
+
+        context = {
+            'comment': comment,
+        }
+
+        return render(request, 'project/_comment.html', context)

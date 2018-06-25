@@ -1,0 +1,12 @@
+{% load i18n %}
+
+{% if can_add_comment %}
+    <form action="{% url 'project:add-comment-to-task' task.id %}" class="task-comments__add">
+        {% csrf_token %}
+        <div class="form-group">
+            <textarea name="comment_text" placeholder="{% trans 'Ваш комментарий' %}" class="form-control"></textarea>
+        </div>
+        <button class="btn btn-primary" id="addCommentToTask">{% trans 'Добавить коментарий' %}</button>
+    </form>
+{% else %}
+{% endif %}

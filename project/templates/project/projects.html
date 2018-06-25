@@ -1,6 +1,7 @@
 {% extends 'cabinet.html' %}
 {% load i18n %}
 {% load static %}
+{% load project_tags %}
 
 {% block page_title %}{% endblock page_title %}
 {% block headed_scripts %}{% endblock headed_scripts %}
@@ -99,23 +100,11 @@
                                         <div class="task-comments">
                                             <div class="task-comments__comments-list">
                                                 {% for comment in current_task.comment_set.all %}
-                                                    <div class="row">
-                                                        <div class="col-8 task-comments__comment-author">{{ comment.user }}</div>
-                                                        <div class="col-4 task-comments__comment-date">{{ comment.created }}</div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col-12 task-comments__comment-text">{{ comment.text|safe }}</div>
-                                                    </div>
-                                                    <hr>
+                                                    {% include 'project/_comment.html' with comment=comment %}
                                                 {% endfor %}
+                                                <div id="addCommentContainer"></div>
                                             </div>
-                                            <form action="" class="task-comments__add">
-                                                {% csrf_token %}
-                                                <div class="form-group">
-                                                    <textarea name="" id="" placeholder="{% trans 'Ваш комментарий' %}" class="form-control"></textarea>
-                                                </div>
-                                                <button class="btn btn-primary" id="addCommentToTask">{% trans 'Добавить коментарий' %}</button>
-                                            </form>
+                                            {% add_comment user current_task %}
                                         </div>
                                     </div>
                                 </div>
@@ -131,6 +120,8 @@
 {% block footer_scripts %}
 
 <script src="{% static '' %}bower_components/js-cookie/src/js.cookie.js"></script>
+<script src="{% static '' %}adminbite/assets/libs/toastr/build/toastr.min.js"></script>
+<link rel="stylesheet" href="{% static '' %}adminbite/assets/libs/toastr/build/toastr.min.css">
 <style>
     .list-group-item-primary {
         background: #343d53;

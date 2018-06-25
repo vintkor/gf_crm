@@ -1,0 +1,10 @@
+{% for task in tasks %}
+    <a href="{% url 'project:load-task' task.id %}"
+       class="list-group-item project-loader loader_4 {% if task.is_completed %}is_completed{% elif task.is_on_verify %}is_on_verify{% else %}{% endif %}"
+       data-action="description"
+       data-hide='[]'>
+        <div class="row">
+            <div class="col-10">{{ task.title }}</div>
+        </div>
+    </a>
+{% endfor %}

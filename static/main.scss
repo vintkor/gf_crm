@@ -1,0 +1,14 @@
+.is_completed {
+  background: #d2eed7;
+  color: #707070;
+  text-decoration: line-through;
+  &:hover {
+    color: #707070;
+    text-decoration: line-through;
+  }
+}
+
+.list-group-item-info.is_completed {
+  background: #cbe2f9;
+  text-decoration: line-through;
+}

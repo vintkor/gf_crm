@@ -1,0 +1,11 @@
+{% for milestone in milestones %}
+    <a href="{% url 'project:load-modules' milestone.id %}"
+       class="list-group-item project-loader loader_2"
+       data-action="modules"
+       data-hide='["tasks", "description"]'>
+        <div class="row">
+            <div class="col-10">{{ milestone }}</div>
+            <div class="col-2"><span class="label label-rounded label-info">{{ milestone.get_percent }}</span></div>
+        </div>
+    </a>
+{% endfor %}

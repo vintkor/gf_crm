@@ -48,6 +48,11 @@ $(document).ready(function(){
             self = $(this),
             forHide = $(this).data('hide');
 
+        if(action == 'description') {
+            var taskId = $(this).data('task');
+            Cookies.set('last_visited_task', taskId);
+        }
+
         forHide.forEach(function (el) {
             var body = $('body');
             body.find('#'+el).html('');

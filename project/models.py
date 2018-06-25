@@ -3,6 +3,7 @@ from django.utils.translation import ugettext as _
 from user_profile.models import Client
 from user_profile.models import User
 from settings.models import Setting
+from ckeditor_uploader.fields import RichTextUploadingField
 
 
 class Status(models.Model):
@@ -10,7 +11,7 @@ class Status(models.Model):
     Статусы проектов
     """
     title = models.CharField(max_length=200, verbose_name=_('Статус'))
-    description = models.TextField(verbose_name=_('Описание'), blank=True, null=True)
+    description = RichTextUploadingField(verbose_name=_('Описание'), blank=True, null=True)
     order = models.PositiveSmallIntegerField(verbose_name=_('Порядок сортировки'), default=100)
 
     class Meta:
@@ -27,7 +28,7 @@ class Project(models.Model):
     Проект
     """
     title = models.CharField(verbose_name=_('Название'), max_length=250)
-    description = models.TextField(verbose_name=_('Описание'), blank=True, null=True)
+    description = RichTextUploadingField(verbose_name=_('Описание'), blank=True, null=True)
     client = models.ForeignKey(Client, on_delete=models.CASCADE, verbose_name=_('Клиент'))
     pm = models.ForeignKey(User, on_delete=models.SET_NULL, verbose_name=_('Проект менеджер'), blank=True, null=True)
     status = models.ForeignKey(Status, on_delete=models.SET_NULL, blank=True, null=True)
@@ -102,7 +103,7 @@ class Module(models.Model):
     """
     milestone = models.ForeignKey(Milestone, on_delete=models.CASCADE, verbose_name=_('Майлстоун'))
     title = models.CharField(verbose_name=_('Название'), max_length=250)
-    description = models.TextField(verbose_name=_('Описание'), blank=True, null=True)
+    description = RichTextUploadingField(verbose_name=_('Описание'), blank=True, null=True)
     order = models.PositiveSmallIntegerField(verbose_name=_('Порядок сортировки'), default=100)
 
     class Meta:
@@ -148,7 +149,7 @@ class Task(models.Model):
     """
     module = models.ForeignKey(Module, on_delete=models.CASCADE, verbose_name=_('Модуль'))
     title = models.CharField(verbose_name=_('Название'), max_length=250)
-    description = models.TextField(verbose_name=_('Описание'), blank=True, null=True)
+    description = RichTextUploadingField(verbose_name=_('Описание'), blank=True, null=True)
     collaborator = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True, verbose_name=_('Исполнитель'))
     time = models.PositiveSmallIntegerField(verbose_name=_('Кол-во часов для выполнения'))
     rate_per_hour = models.PositiveSmallIntegerField(verbose_name=_('Ставка за час (USD)'), blank=True, null=True)
@@ -195,7 +196,7 @@ class Comment(models.Model):
     """
     task = models.ForeignKey(Task, on_delete=models.CASCADE, verbose_name=_('Задача'))
     user = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True, verbose_name=_('Пользователь'))
-    text = models.TextField(verbose_name=_('Текс'))
+    text = RichTextUploadingField(verbose_name=_('Текс'))
     created = models.DateTimeField(auto_now_add=True, auto_now=False, verbose_name=_('Дата создания'))
 
     class Meta:

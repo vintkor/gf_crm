@@ -17,6 +17,35 @@ class ProjectListView(ListView):
     context_object_name = 'projects'
     model = Project
 
+    def get(self, *args, **kwargs):
+        last_visited_task = self.request.COOKIES.get('last_visited_task')
+
+        if last_visited_task:
+            try:
+                task = Task.objects.get(id=last_visited_task)
+            except Task.DoesNotExist:
+                return super(ProjectListView, self).get(args, kwargs)
+
+            module = task.module
+            milestone = module.milestone
+            project = milestone.project
+
+            context = {
+                'current_module': module,
+                'modules': milestone.module_set.all(),
+                'current_milestone': milestone,
+                'milestones': project.milestone_set.all(),
+                'current_task': task,
+                'tasks': module.task_set.all(),
+                'current_project': project,
+                self.context_object_name: self.get_queryset(),
+                'has_last_visited_task': True,
+            }
+
+            return render(self.request, self.template_name, context)
+
+        return super(ProjectListView, self).get(args, kwargs)
+
 
 class MilestonesLoaderView(View):
 

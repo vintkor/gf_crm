@@ -1,5 +1,6 @@
 {% extends 'cabinet.html' %}
 {% load i18n %}
+{% load static %}
 
 {% block page_title %}{% endblock page_title %}
 {% block headed_scripts %}{% endblock headed_scripts %}
@@ -12,7 +13,7 @@
                     <p class="list-group-item list-group-item-primary">{% trans 'Проекты' %}</p>
                     {% for project in projects %}
                         <a href="{% url 'project:load-milestones' project.id %}"
-                           class="list-group-item project-loader loader_1"
+                           class="list-group-item project-loader loader_1 {% if current_project == project %}list-group-item-info{% endif %}"
                            data-action="milestones"
                            data-hide='["modules", "tasks", "description"]'>
                             <div class="row">
@@ -24,27 +25,103 @@
                 </div>
             </div>
             <div class="col-2">
-                <div class="list-group milestones-container" style="display: none">
+                <div class="list-group milestones-container" style="display: {% if has_last_visited_task %}block{% else %}none{% endif %}">
                     <p class="list-group-item list-group-item-primary">{% trans 'Майлстоуны' %}</p>
-                    <div id="milestones"></div>
+                    <div id="milestones">
+                        {% if has_last_visited_task %}
+                            {% for milestone in milestones %}
+                                <a href="{% url 'project:load-modules' milestone.id %}"
+                                   class="list-group-item project-loader loader_2 {% if current_milestone == milestone %}list-group-item-info{% endif %}"
+                                   data-action="modules"
+                                   data-hide='["tasks", "description"]'>
+                                    <div class="row">
+                                        <div class="col-10">{{ milestone }}</div>
+                                        <div class="col-2"><span class="label label-rounded label-info">{{ milestone.get_percent }}</span></div>
+                                    </div>
+                                </a>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
                 </div>
             </div>
             <div class="col-2">
-                <div class="list-group modules-container" style="display: none">
+                <div class="list-group modules-container" style="display: {% if has_last_visited_task %}block{% else %}none{% endif %}">
                     <p class="list-group-item list-group-item-primary">{% trans 'Модули' %}</p>
-                    <div id="modules"></div>
+                    <div id="modules">
+                        {% if has_last_visited_task %}
+                            {% for module in modules %}
+                                <a href="{% url 'project:load-tasks' module.id %}"
+                                   class="list-group-item project-loader loader_3 {% if current_module == module %}list-group-item-info{% endif %}"
+                                   data-action="tasks"
+                                   data-hide='["description"]'>
+                                    <div class="row">
+                                        <div class="col-10">{{ module.title }}</div>
+                                        <div class="col-2"><span class="label label-rounded label-info">{{ module.get_percent }}</span></div>
+                                    </div>
+                                </a>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
                 </div>
             </div>
             <div class="col-2">
-                <div class="list-group tasks-container" style="display: none">
+                <div class="list-group tasks-container" style="display: {% if has_last_visited_task %}block{% else %}none{% endif %}">
                     <p class="list-group-item list-group-item-primary">{% trans 'Задачи' %}</p>
-                    <div id="tasks"></div>
+                    <div id="tasks">
+                        {% if has_last_visited_task %}
+                            {% for task in tasks %}
+                                <a href="{% url 'project:load-task' task.id %}"
+                                   class="list-group-item project-loader loader_4 {% if current_task == task %}list-group-item-info{% endif %} {% if task.is_completed %}is_completed{% elif task.is_on_verify %}is_on_verify{% else %}{% endif %}"
+                                   data-action="description"
+                                   data-task="{{ task.id }}"
+                                   data-hide='[]'>
+                                    <div class="row">
+                                        <div class="col-10">{{ task.title }}</div>
+                                    </div>
+                                </a>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
                 </div>
             </div>
             <div class="col-4">
-                <div class="description-container" style="display: none">
+                <div class="description-container" style="display: {% if has_last_visited_task %}block{% else %}none{% endif %}">
                     <p class="list-group-item list-group-item-primary">{% trans 'Описание задачи' %}</p>
-                    <div id="description"></div>
+                    <div id="description">
+                        {% if has_last_visited_task %}
+                            <div class="card">
+                                <div class="card-header {% if current_task.is_completed %}is_completed{% elif current_task.is_on_verify %}is_on_verify{% else %}{% endif %}">
+                                    <h4 class="card-title">{{ current_task.title }}</h4>
+                                </div>
+                                <div class="card-body">
+                                    <div class="task-description">
+                                        <div class="task-description__text">{{ current_task.description|safe }}</div>
+                                        <div class="task-comments">
+                                            <div class="task-comments__comments-list">
+                                                {% for comment in current_task.comment_set.all %}
+                                                    <div class="row">
+                                                        <div class="col-8 task-comments__comment-author">{{ comment.user }}</div>
+                                                        <div class="col-4 task-comments__comment-date">{{ comment.created }}</div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-12 task-comments__comment-text">{{ comment.text|safe }}</div>
+                                                    </div>
+                                                    <hr>
+                                                {% endfor %}
+                                            </div>
+                                            <form action="" class="task-comments__add">
+                                                {% csrf_token %}
+                                                <div class="form-group">
+                                                    <textarea name="" id="" placeholder="{% trans 'Ваш комментарий' %}" class="form-control"></textarea>
+                                                </div>
+                                                <button class="btn btn-primary" id="addCommentToTask">{% trans 'Добавить коментарий' %}</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
         </div>
@@ -52,6 +129,8 @@
 {% endblock content %}
 
 {% block footer_scripts %}
+
+<script src="{% static '' %}bower_components/js-cookie/src/js.cookie.js"></script>
 <style>
     .list-group-item-primary {
         background: #343d53;

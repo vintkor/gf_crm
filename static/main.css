@@ -9,3 +9,16 @@
 .list-group-item-info.is_completed {
   background: #cbe2f9;
   text-decoration: line-through; }
+
+.task-comments {
+  background: #eff1f1;
+  padding: 10px; }
+
+.task-comments__comment-author {
+  font-weight: bold; }
+
+.task-comments__comment-date {
+  text-align: right; }
+
+.task-comments__comment-text {
+  margin-top: 10px; }

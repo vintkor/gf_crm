@@ -53,6 +53,16 @@ $(document).ready(function(){
             Cookies.set('last_visited_task', taskId);
         }
 
+        if (action == 'tasks') {
+            var module_id = $(this).data('module');
+            var addTaskLink = $('#addTask');
+            var link_parts = addTaskLink.attr('href').split('?module_id=');
+            // console.log(link_parts);
+            var new_link = link_parts[0] + '?module_id=' + module_id;
+
+            addTaskLink.attr('href', new_link);
+        }
+
         forHide.forEach(function (el) {
             var body = $('body');
             body.find('#'+el).html('');
@@ -65,7 +75,6 @@ $(document).ready(function(){
             success: function (response) {
                 $('#' + action).html(response);
                 $('.' + action +'-container').show();
-                console.log();
                 self.parents('.list-group').find('.list-group-item').removeClass('list-group-item-info');
 
                 self.addClass('list-group-item-info');
@@ -89,8 +98,13 @@ $(document).ready(function(){
            data: form.serialize(),
            method: 'post',
            success: function (response) {
-               $('#addCommentContainer').html(response);
-               toastr.success('Комментарий успешно добавлен');
+               if (response.status == 0) {
+                   toastr.warning(response.message);
+               } else {
+                   $('#addCommentContainer').html(response);
+                   toastr.success('Комментарий успешно добавлен');
+               }
+
            },
            error: function (e) {
                console.log('error')
@@ -99,7 +113,7 @@ $(document).ready(function(){
 
     });
 
-    // -------------------------- Добавление задачи --------------------------
+    // -------------------------- Добавление задачи - отображение модалки с формой --------------------------
 
     $('body').on('click', '#addTask', function (e) {
         e.preventDefault();
@@ -108,7 +122,33 @@ $(document).ready(function(){
             url: $(this).attr('href'),
             success: function (response) {
                 $('#modalContent').html(response);
+                $('.select2').select2({
+                    width: '100%'
+                });
                 $('#myModal').modal('show');
+            },
+            error: function (e) {
+                console.log('error')
+            }
+        });
+
+    });
+
+    // -------------------------- Добавление задачи - обработка формы --------------------------
+
+    $('body').on('click', '#addTaskBtn', function (e) {
+        e.preventDefault();
+
+        var form = $(this).parents('form');
+
+        $.ajax({
+            url: form.attr('action'),
+            method: 'post',
+            data: form.serialize(),
+            success: function (response) {
+                $('#tasks').append(response);
+                $('#myModal').modal('hide');
+                toastr.success('Задача успешно добавлена');
             },
             error: function (e) {
                 console.log('error')

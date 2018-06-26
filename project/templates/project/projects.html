@@ -7,7 +7,7 @@
 {% block headed_scripts %}{% endblock headed_scripts %}
 
 {% block content %}
-    <div class="container-fluid">
+    <div class="container-fluid" style="min-width: 1900px; width: 100%;">
         <div class="row no-gutters-">
             <div class="col-2">
                 <div class="list-group">
@@ -69,7 +69,8 @@
                                 <a href="{% url 'project:load-tasks' module.id %}"
                                    class="list-group-item project-loader loader_3 {% if current_module == module %}list-group-item-info{% endif %}"
                                    data-action="tasks"
-                                   data-hide='["description"]'>
+                                   data-hide='["description"]'
+                                   data-module="{{ module.id }}">
                                     <div class="row">
                                         <div class="col-10">{{ module.title }}</div>
                                         <div class="col-2"><span class="label label-rounded label-info">{{ module.get_percent }}</span></div>
@@ -85,7 +86,11 @@
                     <div class="list-group-item list-group-item-primary">
                         <div class="row">
                             <div class="col-11">{% trans 'Задачи' %}</div>
-                            <div class="col-1"><a href="{% url 'project:add-task' %}" id="addTask"><i class="fa fa-plus add-link"></i></a></div>
+                            <div class="col-1">
+                                <a href="{% url 'project:add-task' %}?module_id={{ current_module.id }}" id="addTask">
+                                    <i class="fa fa-plus add-link"></i>
+                                </a>
+                            </div>
                         </div>
                     </div>
                     <div id="tasks">
@@ -141,7 +146,9 @@
 
 <script src="{% static '' %}bower_components/js-cookie/src/js.cookie.js"></script>
 <script src="{% static '' %}adminbite/assets/libs/toastr/build/toastr.min.js"></script>
+<script src="{% static '' %}adminbite/assets/libs/select2/dist/js/select2.min.js"></script>
 <link rel="stylesheet" href="{% static '' %}adminbite/assets/libs/toastr/build/toastr.min.css">
+<link rel="stylesheet" href="{% static '' %}adminbite/assets/libs/select2/dist/css/select2.min.css">
 <style>
     .list-group-item-primary {
         background: #343d53;

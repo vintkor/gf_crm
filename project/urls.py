@@ -6,7 +6,7 @@ from .views import (
     TasksLoaderView,
     SingleTaskLoaderView,
     AddCommentView,
-    AddTaskView,
+    AddTaskFormView,
 )
 
 
@@ -18,5 +18,5 @@ urlpatterns = [
     path('load-tasks/<int:module_id>/', TasksLoaderView.as_view(), name='load-tasks'),
     path('load-task/<int:task_id>/', SingleTaskLoaderView.as_view(), name='load-task'),
     path('add-comment-to-task/<int:task_id>/', AddCommentView.as_view(), name='add-comment-to-task'),
-    path('add-task/', AddTaskView.as_view(), name='add-task'),
+    path('add-task/', AddTaskFormView.as_view(), name='add-task'),
 ]

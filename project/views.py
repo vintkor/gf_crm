@@ -3,7 +3,7 @@ import datetime
 from django.http import JsonResponse, HttpResponseBadRequest
 from django.shortcuts import render
 from django.views import View
-from django.views.generic import ListView
+from django.views.generic import ListView, FormView
 from .models import (
     Project,
     Milestone,
@@ -11,6 +11,9 @@ from .models import (
     Task,
     Comment)
 from django.utils.translation import ugettext as _
+from .forms import (
+    AddTaskForm,
+)
 
 
 class ProjectListView(ListView):
@@ -112,23 +115,71 @@ class AddCommentView(View):
             return HttpResponseBadRequest()
 
         comment_text = request.POST.get('comment_text')
+        if len(comment_text) > 0:
 
-        comment = Comment(
-            text=comment_text,
-            user=self.request.user,
-            task=task,
+            comment = Comment(
+                text=comment_text,
+                user=self.request.user,
+                task=task,
+            )
+            comment.save()
+
+            context = {
+                'comment': comment,
+            }
+
+            return render(request, 'project/_comment.html', context)
+
+        return JsonResponse({
+            'status': 0,
+            'message': _('Комментарий не может быть пустым')
+        })
+
+
+class AddTaskFormView(FormView):
+    """
+    Добавление задачи
+    """
+    template_name = 'project/_add-task-modal.html'
+    form_class = AddTaskForm
+    module_id = None
+
+    def get(self, *args, **kwargs):
+        module_id = self.request.GET.get('module_id')
+        self.module_id = module_id
+        return super(AddTaskFormView, self).get(args, kwargs)
+
+    def get_form_kwargs(self):
+        kwargs = super(AddTaskFormView, self).get_form_kwargs()
+        kwargs['module_id'] = self.module_id
+        return kwargs
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(AddTaskFormView, self).get_context_data()
+        context['module_id'] = self.module_id
+        return context
+
+    def post(self, request, *args, **kwargs):
+
+        module_id = request.POST.get('module')
+        title = request.POST.get('title')
+        description = request.POST.get('description')
+        collaborator_id = request.POST.get('collaborator')
+        time = request.POST.get('time')
+        rate_per_hour = request.POST.get('rate_per_hour')
+        status = request.POST.get('status')
+
+        task = Task(
+            module_id=module_id,
+            title=title,
+            description=description,
+            collaborator_id=collaborator_id,
+            time=time,
+            rate_per_hour=rate_per_hour,
+            status=status,
         )
-        comment.save()
-
+        task.save()
         context = {
-            'comment': comment,
+            'task': task,
         }
-
-        return render(request, 'project/_comment.html', context)
-
-
-class AddTaskView(View):
-
-    def get(self, request):
-        context = {}
-        return render(request, 'project/_add-task-modal.html', context)
+        return render(request, 'project/_task-part.html', context)

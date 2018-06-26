@@ -1,6 +1,6 @@
 {% load i18n %}
 
-<form action="">
+<form action="{% url 'project:add-task' %}?module_id={{ module_id }}" method="POST" id="">
 
     {% csrf_token %}
     <div class="modal-header">
@@ -10,18 +10,18 @@
         </button>
     </div>
     <div class="modal-body">
-        <div class="form-group">
-            <label for="task_title">{% trans 'Заголовок' %}</label>
-            <input type="text" name="task_title" id="task_title" class="form-control" placeholder="{% trans 'Заголовок' %}">
-        </div>
-        <div class="form-group">
-            <label for="task_description">{% trans 'Подробное описание задачи' %}</label>
-            <textarea name="task_description" id="task_description" class="form-control" placeholder="{% trans 'Подробное описание задачи' %}"></textarea>
-        </div>
+
+        {% for field in form %}
+            <div class="form-group">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+            </div>
+        {% endfor %}
+
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">{% trans 'Отмена' %}</button>
-        <button type="button" class="btn btn-primary">{% trans 'Добавить задачу' %}</button>
-</div>
+        <button type="submit" class="btn btn-primary" id="addTaskBtn">{% trans 'Добавить задачу' %}</button>
+    </div>
 
 </form>

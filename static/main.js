@@ -57,7 +57,6 @@ $(document).ready(function(){
             var module_id = $(this).data('module');
             var addTaskLink = $('#addTask');
             var link_parts = addTaskLink.attr('href').split('?module_id=');
-            // console.log(link_parts);
             var new_link = link_parts[0] + '?module_id=' + module_id;
 
             addTaskLink.attr('href', new_link);
@@ -101,7 +100,7 @@ $(document).ready(function(){
                if (response.status == 0) {
                    toastr.warning(response.message);
                } else {
-                   $('#addCommentContainer').html(response);
+                   $('#addCommentContainer').append(response);
                    toastr.success('Комментарий успешно добавлен');
                }
 
@@ -146,9 +145,16 @@ $(document).ready(function(){
             method: 'post',
             data: form.serialize(),
             success: function (response) {
-                $('#tasks').append(response);
-                $('#myModal').modal('hide');
-                toastr.success('Задача успешно добавлена');
+                if (response.status) {
+                    $('#tasks').append(response.template);
+                    $('#myModal').modal('hide');
+                    toastr.success('Задача успешно добавлена');
+                    $('#modulePercent__'+response.percentages.module_id).text(response.percentages.module);
+                    $('#milestonesPercent__'+response.percentages.milestone_id).text(response.percentages.milestone);
+                    $('#projectPercent__'+response.percentages.project_id).text(response.percentages.project);
+                } else {
+                    toastr.warning('Что-то пошло не так');
+                }
             },
             error: function (e) {
                 console.log('error')

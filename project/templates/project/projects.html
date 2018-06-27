@@ -24,7 +24,7 @@
                            data-hide='["modules", "tasks", "description"]'>
                             <div class="row">
                                 <div class="col-10">{{ project.title }}</div>
-                                <div class="col-2"><span class="label label-rounded label-info">{{ project.get_percent }}</span></div>
+                                <div class="col-2"><span class="label label-rounded label-info" id="projectPercent__{{ project.id }}">{{ project.get_percent }}</span></div>
                             </div>
                         </a>
                     {% endfor %}
@@ -47,7 +47,7 @@
                                    data-hide='["tasks", "description"]'>
                                     <div class="row">
                                         <div class="col-10">{{ milestone }}</div>
-                                        <div class="col-2"><span class="label label-rounded label-info">{{ milestone.get_percent }}</span></div>
+                                        <div class="col-2"><span class="label label-rounded label-info" id="milestonesPercent__{{ milestone.id }}">{{ milestone.get_percent }}</span></div>
                                     </div>
                                 </a>
                             {% endfor %}
@@ -73,7 +73,7 @@
                                    data-module="{{ module.id }}">
                                     <div class="row">
                                         <div class="col-10">{{ module.title }}</div>
-                                        <div class="col-2"><span class="label label-rounded label-info">{{ module.get_percent }}</span></div>
+                                        <div class="col-2"><span class="label label-rounded label-info" id="modulePercent__{{ module.id }}">{{ module.get_percent }}</span></div>
                                     </div>
                                 </a>
                             {% endfor %}

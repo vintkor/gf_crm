@@ -6,7 +6,7 @@
        data-module="{{ module.id }}">
         <div class="row">
             <div class="col-10">{{ module.title }}</div>
-            <div class="col-2"><span class="label label-rounded label-info">{{ module.get_percent }}</span></div>
+            <div class="col-2"><span class="label label-rounded label-info" id="modulePercent__{{ module.id }}">{{ module.get_percent }}</span></div>
         </div>
     </a>
 {% endfor %}

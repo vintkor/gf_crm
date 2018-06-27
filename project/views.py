@@ -1,5 +1,5 @@
 import datetime
-
+from django.template import Template, Context
 from django.http import JsonResponse, HttpResponseBadRequest
 from django.shortcuts import render
 from django.views import View
@@ -182,4 +182,25 @@ class AddTaskFormView(FormView):
         context = {
             'task': task,
         }
-        return render(request, 'project/_task-part.html', context)
+
+        t = Template("{% include 'project/_task-part.html' with task=task %}")
+        template = t.render(Context(context))
+
+        module = task.module
+        milestone = module.milestone
+        project = milestone.project
+
+        return JsonResponse({
+            'status': 1,
+            'template': template,
+            'percentages': {
+                'project': project.get_percent(),
+                'project_id': project.id,
+                'milestone': milestone.get_percent(),
+                'milestone_id': milestone.id,
+                'module': module.get_percent(),
+                'module_id': module.id,
+            }
+        })
+
+        # return render(request, 'project/_task-part.html', context)

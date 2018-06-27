@@ -41,6 +41,7 @@ except:
         'project',
         'geo',
         'settings',
+        'sales',
     ]
 
     MIDDLEWARE = [

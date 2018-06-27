@@ -11,6 +11,7 @@ urlpatterns = [
     path('dashboard/', include([
         path('', TemplateView.as_view(template_name='cabinet.html'), name='dashboard'),
         path('projects/', include('project.urls')),
+        path('sales/', include('sales.urls')),
     ])),
     path('ckeditor/', include('ckeditor_uploader.urls')),
 ] + static(MEDIA_URL, document_root=MEDIA_ROOT)

@@ -1,15 +1,13 @@
 from django.contrib import admin
 from .models import (
-    Status,
     User,
     Source,
     Client,
+    ClientStatus,
+    Developer,
+    Technology,
+    DeveloperTechnology,
 )
-
-
-@admin.register(Status)
-class StatusAdmin(admin.ModelAdmin):
-    pass
 
 
 @admin.register(Source)
@@ -37,7 +35,6 @@ class UserAdmin(admin.ModelAdmin):
         'email',
         'first_name',
         'last_name',
-        'rate_per_hour',
         'is_admin',
         'is_client',
     )
@@ -47,3 +44,28 @@ class UserAdmin(admin.ModelAdmin):
     ordering = ('email',)
     filter_horizontal = ('groups', 'user_permissions')
     inlines = (ClientInline,)
+
+
+@admin.register(ClientStatus)
+class ClientStatusAdmin(admin.ModelAdmin):
+    pass
+
+
+class DeveloperTechnologyInline(admin.TabularInline):
+    extra = 0
+    model = DeveloperTechnology
+
+
+@admin.register(Developer)
+class DeveloperAdmin(admin.ModelAdmin):
+    inlines = (DeveloperTechnologyInline,)
+
+
+@admin.register(Technology)
+class TechnologyAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(DeveloperTechnology)
+class DeveloperTechnologyAdmin(admin.ModelAdmin):
+    pass

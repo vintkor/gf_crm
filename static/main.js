@@ -102,6 +102,7 @@ $(document).ready(function(){
                } else {
                    $('#addCommentContainer').append(response);
                    toastr.success('Комментарий успешно добавлен');
+                   form.find('textarea').val('');
                }
 
            },

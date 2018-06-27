@@ -1,0 +1,44 @@
+{% extends 'cabinet.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block page_title %}{% endblock page_title %}
+{% block headed_scripts %}{% endblock headed_scripts %}
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <tr>
+                            <th>{% trans 'Клиент' %}</th>
+                            <th>{% trans 'Статус' %}</th>
+                            <th>{% trans 'Менеджер' %}</th>
+                            <th>{% trans 'Источник' %}</th>
+                            <th>{% trans 'Страна' %}</th>
+                        </tr>
+                        {% for client in clients %}
+                            <tr>
+                                <td>{{ client }}</td>
+                                <td>{{ client.status }}</td>
+                                <td>
+                                    <ul>
+                                        {% for manager in client.manager.all %}
+                                            <li>{{ manager }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </td>
+                                <td>{{ client.source }}</td>
+                                <td>{{ client.country }}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block footer_scripts %}
+{% endblock %}

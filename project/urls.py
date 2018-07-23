@@ -9,6 +9,7 @@ from .views import (
     AddTaskFormView,
     AddModuleFormView,
     AddMilestoneFormView,
+    AddProjectFormView,
 )
 
 
@@ -23,4 +24,5 @@ urlpatterns = [
     path('add-task/', AddTaskFormView.as_view(), name='add-task'),
     path('add-module/', AddModuleFormView.as_view(), name='add-module'),
     path('add-milestone/', AddMilestoneFormView.as_view(), name='add-milestone'),
+    path('add-project/', AddProjectFormView.as_view(), name='add-project'),
 ]

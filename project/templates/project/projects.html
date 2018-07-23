@@ -14,12 +14,18 @@
                     <div class="list-group-item list-group-item-primary">
                         <div class="row">
                             <div class="col-11">{% trans 'Проекты' %}</div>
-                            <div class="col-1"><a href="#"><i class="fa fa-plus add-link"></i></a></div>
+                            <div class="col-1">
+                                <a href="{% url 'project:add-project' %}" id="addProject">
+                                    <i class="fa fa-plus add-link"></i>
+                                </a>
+                            </div>
                         </div>
                     </div>
-                    {% for project in projects %}
-                        {% include 'project/_project-part.html' with project=project %}
-                    {% endfor %}
+                    <div id="projects">
+                        {% for project in projects %}
+                            {% include 'project/_project-part.html' with project=project %}
+                        {% endfor %}
+                    </div>
                 </div>
             </div>
             <div class="col-2">

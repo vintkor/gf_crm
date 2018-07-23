@@ -270,4 +270,49 @@ $(document).ready(function(){
 
     });
 
+    // -------------------------- Добавление проекта - отображение модалки с формой --------------------------
+
+    $('body').on('click', '#addProject', function (e) {
+        e.preventDefault();
+
+        $.ajax({
+            url: $(this).attr('href'),
+            success: function (response) {
+                $('#modalContent').html(response);
+                $('#myModal').modal('show');
+            },
+            error: function (e) {
+                console.log('error')
+            }
+        });
+
+    });
+
+    // -------------------------- Добавление проекта - обработка формы --------------------------
+
+    $('body').on('click', '#addProjectBtn', function (e) {
+        e.preventDefault();
+
+        var form = $(this).parents('form');
+
+        $.ajax({
+            url: form.attr('action'),
+            method: 'post',
+            data: form.serialize(),
+            success: function (response) {
+                if (response.status) {
+                    $('#projects').append(response.template);
+                    $('#myModal').modal('hide');
+                    toastr.success('Проект успешно добавлен');
+                } else {
+                    toastr.warning('Что-то пошло не так');
+                }
+            },
+            error: function (e) {
+                console.log('error')
+            }
+        });
+
+    });
+
 });

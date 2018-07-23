@@ -4,6 +4,7 @@ from .models import (
     Task,
     Module,
     Milestone,
+    Project,
     STATUS_CHOICES,
 )
 from user_profile.models import User
@@ -92,3 +93,19 @@ class AddMilestoneForm(forms.ModelForm):
         project_id = kwargs.pop('project_id')
         super().__init__(*args, **kwargs)
         self.fields['project'].initial = project_id
+
+
+class AddProjectForm(forms.ModelForm):
+
+    class Meta:
+        model = Project
+        fields = (
+            'title',
+            'description',
+            'client',
+            'pm',
+            'status',
+            'is_active',
+            'date_start',
+            'date_end',
+        )

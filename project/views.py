@@ -15,6 +15,7 @@ from .forms import (
     AddTaskForm,
     AddModuleForm,
     AddMilestoneForm,
+    AddProjectForm,
 )
 
 
@@ -315,4 +316,46 @@ class AddMilestoneFormView(FormView):
                 'project': project.get_percent(),
                 'project_id': project.id,
             }
+        })
+
+
+class AddProjectFormView(FormView):
+    """
+    Добавление проекта
+    """
+    template_name = 'project/_add-project-modal.html'
+    form_class = AddProjectForm
+
+    def post(self, request, *args, **kwargs):
+
+        title = request.POST.get('title')
+        description = request.POST.get('description')
+        client = request.POST.get('client')
+        pm = request.POST.get('pm')
+        status = request.POST.get('status')
+        is_active = True if request.POST.get('is_active') == 'on' else False
+        date_start = request.POST.get('date_start')
+        date_end = request.POST.get('date_end')
+
+        project = Project(
+            title=title,
+            description=description,
+            client_id=client,
+            pm_id=pm,
+            status_id=status,
+            is_active=is_active,
+            date_start=date_start,
+            date_end=date_end,
+        )
+        project.save()
+        context = {
+            'project': project,
+        }
+
+        t = Template("{% include 'project/_project-part.html' with project=project %}")
+        template = t.render(Context(context))
+
+        return JsonResponse({
+            'status': 1,
+            'template': template,
         })

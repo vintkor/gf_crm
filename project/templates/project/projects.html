@@ -18,15 +18,7 @@
                         </div>
                     </div>
                     {% for project in projects %}
-                        <a href="{% url 'project:load-milestones' project.id %}"
-                           class="list-group-item project-loader loader_1 {% if current_project == project %}list-group-item-info{% endif %}"
-                           data-action="milestones"
-                           data-hide='["modules", "tasks", "description"]'>
-                            <div class="row">
-                                <div class="col-10">{{ project.title }}</div>
-                                <div class="col-2"><span class="label label-rounded label-info" id="projectPercent__{{ project.id }}">{{ project.get_percent }}</span></div>
-                            </div>
-                        </a>
+                        {% include 'project/_project-part.html' with project=project %}
                     {% endfor %}
                 </div>
             </div>
@@ -41,16 +33,7 @@
                     <div id="milestones">
                         {% if has_last_visited_task %}
                             {% for milestone in milestones %}
-                                <a href="{% url 'project:load-modules' milestone.id %}"
-                                   class="list-group-item project-loader loader_2 {% if current_milestone == milestone %}list-group-item-info{% endif %}"
-                                   data-action="modules"
-                                   data-hide='["tasks", "description"]'
-                                   data-milestone="{{ milestone.id }}">
-                                    <div class="row">
-                                        <div class="col-10">{{ milestone }}</div>
-                                        <div class="col-2"><span class="label label-rounded label-info" id="milestonesPercent__{{ milestone.id }}">{{ milestone.get_percent }}</span></div>
-                                    </div>
-                                </a>
+                                {% include 'project/_milestone-part.html' with milestone=milestone %}
                             {% endfor %}
                         {% endif %}
                     </div>

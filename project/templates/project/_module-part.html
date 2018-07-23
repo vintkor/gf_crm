@@ -1,0 +1,10 @@
+<a href="{% url 'project:load-tasks' module.id %}"
+   class="list-group-item project-loader loader_3 {% if current_module == module %}list-group-item-info{% endif %}"
+   data-action="tasks"
+   data-hide='["description"]'
+   data-module="{{ module.id }}">
+    <div class="row">
+        <div class="col-10">{{ module.title }}</div>
+        <div class="col-2"><span class="label label-rounded label-info" id="modulePercent__{{ module.id }}">{{ module.get_percent }}</span></div>
+    </div>
+</a>

@@ -13,6 +13,7 @@ from .models import (
 from django.utils.translation import ugettext as _
 from .forms import (
     AddTaskForm,
+    AddModuleForm,
 )
 
 
@@ -145,8 +146,7 @@ class AddTaskFormView(FormView):
     module_id = None
 
     def get(self, *args, **kwargs):
-        module_id = self.request.GET.get('module_id')
-        self.module_id = module_id
+        self.module_id = self.request.GET.get('module_id')
         return super(AddTaskFormView, self).get(args, kwargs)
 
     def get_form_kwargs(self):
@@ -204,3 +204,59 @@ class AddTaskFormView(FormView):
         })
 
         # return render(request, 'project/_task-part.html', context)
+
+
+class AddModuleFormView(FormView):
+    """
+    Добавление модуля
+    """
+    template_name = 'project/_add-module-modal.html'
+    form_class = AddModuleForm
+    milestone_id = None
+
+    def get(self, *args, **kwargs):
+        self.milestone_id = self.request.GET.get('milestone_id')
+        return super(AddModuleFormView, self).get(args, kwargs)
+
+    def get_form_kwargs(self):
+        kwargs = super(AddModuleFormView, self).get_form_kwargs()
+        kwargs['milestone_id'] = self.milestone_id
+        return kwargs
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(AddModuleFormView, self).get_context_data()
+        context['milestone_id'] = self.milestone_id
+        return context
+
+    def post(self, request, *args, **kwargs):
+
+        milestone_id = request.POST.get('milestone')
+        title = request.POST.get('title')
+        description = request.POST.get('description')
+
+        module = Module(
+            milestone_id=milestone_id,
+            title=title,
+            description=description,
+        )
+        module.save()
+        context = {
+            'module': module,
+        }
+
+        t = Template("{% include 'project/_module-part.html' with module=module %}")
+        template = t.render(Context(context))
+
+        milestone = module.milestone
+        project = milestone.project
+
+        return JsonResponse({
+            'status': 1,
+            'template': template,
+            'percentages': {
+                'project': project.get_percent(),
+                'project_id': project.id,
+                'milestone': milestone.get_percent(),
+                'milestone_id': milestone.id,
+            }
+        })

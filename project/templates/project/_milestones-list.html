@@ -2,7 +2,8 @@
     <a href="{% url 'project:load-modules' milestone.id %}"
        class="list-group-item project-loader loader_2"
        data-action="modules"
-       data-hide='["tasks", "description"]'>
+       data-hide='["tasks", "description"]'
+       data-milestone="{{ milestone.id }}">
         <div class="row">
             <div class="col-10">{{ milestone }}</div>
             <div class="col-2"><span class="label label-rounded label-info" id="milestonesPercent__{{ milestone.id }}">{{ milestone.get_percent }}</span></div>

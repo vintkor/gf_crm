@@ -62,6 +62,14 @@ $(document).ready(function(){
             addTaskLink.attr('href', new_link);
         }
 
+        if (action == 'modules') {
+            var milestone_id = $(this).data('milestone');
+            var addModuleLink = $('#addModule');
+            var link_parts = addModuleLink.attr('href').split('?milestone_id=');
+            var new_link = link_parts[0] + '?milestone_id=' + milestone_id;
+            addModuleLink.attr('href', new_link);
+        }
+
         forHide.forEach(function (el) {
             var body = $('body');
             body.find('#'+el).html('');
@@ -122,9 +130,6 @@ $(document).ready(function(){
             url: $(this).attr('href'),
             success: function (response) {
                 $('#modalContent').html(response);
-                $('.select2').select2({
-                    width: '100%'
-                });
                 $('#myModal').modal('show');
             },
             error: function (e) {
@@ -151,6 +156,53 @@ $(document).ready(function(){
                     $('#myModal').modal('hide');
                     toastr.success('Задача успешно добавлена');
                     $('#modulePercent__'+response.percentages.module_id).text(response.percentages.module);
+                    $('#milestonesPercent__'+response.percentages.milestone_id).text(response.percentages.milestone);
+                    $('#projectPercent__'+response.percentages.project_id).text(response.percentages.project);
+                } else {
+                    toastr.warning('Что-то пошло не так');
+                }
+            },
+            error: function (e) {
+                console.log('error')
+            }
+        });
+
+    });
+
+    // -------------------------- Добавление модуля - отображение модалки с формой --------------------------
+
+    $('body').on('click', '#addModule', function (e) {
+        e.preventDefault();
+
+        $.ajax({
+            url: $(this).attr('href'),
+            success: function (response) {
+                $('#modalContent').html(response);
+                $('#myModal').modal('show');
+            },
+            error: function (e) {
+                console.log('error')
+            }
+        });
+
+    });
+
+    // -------------------------- Добавление модуля - обработка формы --------------------------
+
+    $('body').on('click', '#addModuleBtn', function (e) {
+        e.preventDefault();
+
+        var form = $(this).parents('form');
+
+        $.ajax({
+            url: form.attr('action'),
+            method: 'post',
+            data: form.serialize(),
+            success: function (response) {
+                if (response.status) {
+                    $('#modules').append(response.template);
+                    $('#myModal').modal('hide');
+                    toastr.success('Модуль успешно добавлен');
                     $('#milestonesPercent__'+response.percentages.milestone_id).text(response.percentages.milestone);
                     $('#projectPercent__'+response.percentages.project_id).text(response.percentages.project);
                 } else {

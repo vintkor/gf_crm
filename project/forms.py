@@ -2,6 +2,7 @@ from django import forms
 from django.utils.translation import ugettext as _
 from .models import (
     Task,
+    Module,
     STATUS_CHOICES,
 )
 from user_profile.models import User
@@ -49,3 +50,27 @@ class AddTaskForm(forms.ModelForm):
         module_id = kwargs.pop('module_id')
         super().__init__(*args, **kwargs)
         self.fields['module'].initial = module_id
+
+
+class AddModuleForm(forms.ModelForm):
+    title = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        label=_('Заголовок задачи')
+    )
+    description = forms.CharField(
+        widget=forms.Textarea(attrs={'class': 'form-control'}),
+        label=_('Описание задачи')
+    )
+
+    class Meta:
+        model = Module
+        fields = (
+            'milestone',
+            'title',
+            'description',
+        )
+
+    def __init__(self, *args, **kwargs):
+        milestone_id = kwargs.pop('milestone_id')
+        super().__init__(*args, **kwargs)
+        self.fields['milestone'].initial = milestone_id

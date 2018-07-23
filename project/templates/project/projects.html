@@ -44,7 +44,8 @@
                                 <a href="{% url 'project:load-modules' milestone.id %}"
                                    class="list-group-item project-loader loader_2 {% if current_milestone == milestone %}list-group-item-info{% endif %}"
                                    data-action="modules"
-                                   data-hide='["tasks", "description"]'>
+                                   data-hide='["tasks", "description"]'
+                                   data-milestone="{{ milestone.id }}">
                                     <div class="row">
                                         <div class="col-10">{{ milestone }}</div>
                                         <div class="col-2"><span class="label label-rounded label-info" id="milestonesPercent__{{ milestone.id }}">{{ milestone.get_percent }}</span></div>
@@ -60,22 +61,17 @@
                     <div class="list-group-item list-group-item-primary">
                         <div class="row">
                             <div class="col-11">{% trans 'Модули' %}</div>
-                            <div class="col-1"><a href="#" id="addModule"><i class="fa fa-plus add-link"></i></a></div>
+                            <div class="col-1">
+                                <a href="{% url 'project:add-module' %}?milestone_id={{ current_milestone.id }}" id="addModule">
+                                    <i class="fa fa-plus add-link"></i>
+                                </a>
+                            </div>
                         </div>
                     </div>
                     <div id="modules">
                         {% if has_last_visited_task %}
                             {% for module in modules %}
-                                <a href="{% url 'project:load-tasks' module.id %}"
-                                   class="list-group-item project-loader loader_3 {% if current_module == module %}list-group-item-info{% endif %}"
-                                   data-action="tasks"
-                                   data-hide='["description"]'
-                                   data-module="{{ module.id }}">
-                                    <div class="row">
-                                        <div class="col-10">{{ module.title }}</div>
-                                        <div class="col-2"><span class="label label-rounded label-info" id="modulePercent__{{ module.id }}">{{ module.get_percent }}</span></div>
-                                    </div>
-                                </a>
+                                {% include 'project/_module-part.html' with module=module %}
                             {% endfor %}
                         {% endif %}
                     </div>
@@ -96,15 +92,7 @@
                     <div id="tasks">
                         {% if has_last_visited_task %}
                             {% for task in tasks %}
-                                <a href="{% url 'project:load-task' task.id %}"
-                                   class="list-group-item project-loader loader_4 {% if current_task == task %}list-group-item-info{% endif %} {% if task.is_completed %}is_completed{% elif task.is_on_verify %}is_on_verify{% else %}{% endif %}"
-                                   data-action="description"
-                                   data-task="{{ task.id }}"
-                                   data-hide='[]'>
-                                    <div class="row">
-                                        <div class="col-10">{{ task.title }}</div>
-                                    </div>
-                                </a>
+                                {% include 'project/_task-part.html' with task=task %}
                             {% endfor %}
                         {% endif %}
                     </div>

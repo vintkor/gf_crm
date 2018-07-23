@@ -1,12 +1,3 @@
 {% for module in modules %}
-    <a href="{% url 'project:load-tasks' module.id %}"
-       class="list-group-item project-loader loader_3"
-       data-action="tasks"
-       data-hide='["description"]'
-       data-module="{{ module.id }}">
-        <div class="row">
-            <div class="col-10">{{ module.title }}</div>
-            <div class="col-2"><span class="label label-rounded label-info" id="modulePercent__{{ module.id }}">{{ module.get_percent }}</span></div>
-        </div>
-    </a>
+    {% include 'project/_module-part.html' with module=module %}
 {% endfor %}

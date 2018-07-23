@@ -3,6 +3,7 @@ from django.utils.translation import ugettext as _
 from .models import (
     Task,
     Module,
+    Milestone,
     STATUS_CHOICES,
 )
 from user_profile.models import User
@@ -74,3 +75,20 @@ class AddModuleForm(forms.ModelForm):
         milestone_id = kwargs.pop('milestone_id')
         super().__init__(*args, **kwargs)
         self.fields['milestone'].initial = milestone_id
+
+
+class AddMilestoneForm(forms.ModelForm):
+
+    class Meta:
+        model = Milestone
+        fields = (
+            'project',
+            'index_number',
+            'amount_of_days',
+            'date_start',
+        )
+
+    def __init__(self, *args, **kwargs):
+        project_id = kwargs.pop('project_id')
+        super().__init__(*args, **kwargs)
+        self.fields['project'].initial = project_id

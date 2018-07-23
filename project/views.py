@@ -14,6 +14,7 @@ from django.utils.translation import ugettext as _
 from .forms import (
     AddTaskForm,
     AddModuleForm,
+    AddMilestoneForm,
 )
 
 
@@ -258,5 +259,60 @@ class AddModuleFormView(FormView):
                 'project_id': project.id,
                 'milestone': milestone.get_percent(),
                 'milestone_id': milestone.id,
+            }
+        })
+
+
+class AddMilestoneFormView(FormView):
+    """
+    Добавление майлстоуна
+    """
+    template_name = 'project/_add-milestone-modal.html'
+    form_class = AddMilestoneForm
+    project_id = None
+
+    def get(self, *args, **kwargs):
+        self.project_id = self.request.GET.get('project_id')
+        return super(AddMilestoneFormView, self).get(args, kwargs)
+
+    def get_form_kwargs(self):
+        kwargs = super(AddMilestoneFormView, self).get_form_kwargs()
+        kwargs['project_id'] = self.project_id
+        return kwargs
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(AddMilestoneFormView, self).get_context_data()
+        context['project_id'] = self.project_id
+        return context
+
+    def post(self, request, *args, **kwargs):
+
+        project_id = request.POST.get('project')
+        index_number = request.POST.get('index_number')
+        amount_of_days = request.POST.get('amount_of_days')
+        date_start = request.POST.get('date_start')
+
+        milestone = Milestone(
+            project_id=project_id,
+            index_number=index_number,
+            amount_of_days=amount_of_days,
+            date_start=date_start,
+        )
+        milestone.save()
+        context = {
+            'milestone': milestone,
+        }
+
+        t = Template("{% include 'project/_milestone-part.html' with milestone=milestone %}")
+        template = t.render(Context(context))
+
+        project = milestone.project
+
+        return JsonResponse({
+            'status': 1,
+            'template': template,
+            'percentages': {
+                'project': project.get_percent(),
+                'project_id': project.id,
             }
         })

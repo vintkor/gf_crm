@@ -8,6 +8,7 @@ from .views import (
     AddCommentView,
     AddTaskFormView,
     AddModuleFormView,
+    AddMilestoneFormView,
 )
 
 
@@ -21,4 +22,5 @@ urlpatterns = [
     path('add-comment-to-task/<int:task_id>/', AddCommentView.as_view(), name='add-comment-to-task'),
     path('add-task/', AddTaskFormView.as_view(), name='add-task'),
     path('add-module/', AddModuleFormView.as_view(), name='add-module'),
+    path('add-milestone/', AddMilestoneFormView.as_view(), name='add-milestone'),
 ]

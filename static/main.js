@@ -70,6 +70,14 @@ $(document).ready(function(){
             addModuleLink.attr('href', new_link);
         }
 
+        if (action == 'milestones') {
+            var project_id = $(this).data('project');
+            var addMilestoneLink = $('#addMilestone');
+            var link_parts = addMilestoneLink.attr('href').split('?project_id=');
+            var new_link = link_parts[0] + '?project_id=' + project_id;
+            addMilestoneLink.attr('href', new_link);
+        }
+
         forHide.forEach(function (el) {
             var body = $('body');
             body.find('#'+el).html('');
@@ -204,6 +212,52 @@ $(document).ready(function(){
                     $('#myModal').modal('hide');
                     toastr.success('Модуль успешно добавлен');
                     $('#milestonesPercent__'+response.percentages.milestone_id).text(response.percentages.milestone);
+                    $('#projectPercent__'+response.percentages.project_id).text(response.percentages.project);
+                } else {
+                    toastr.warning('Что-то пошло не так');
+                }
+            },
+            error: function (e) {
+                console.log('error')
+            }
+        });
+
+    });
+
+    // -------------------------- Добавление майлстоуна - отображение модалки с формой --------------------------
+
+    $('body').on('click', '#addMilestone', function (e) {
+        e.preventDefault();
+
+        $.ajax({
+            url: $(this).attr('href'),
+            success: function (response) {
+                $('#modalContent').html(response);
+                $('#myModal').modal('show');
+            },
+            error: function (e) {
+                console.log('error')
+            }
+        });
+
+    });
+
+    // -------------------------- Добавление майлстоуна - обработка формы --------------------------
+
+    $('body').on('click', '#addMilestoneBtn', function (e) {
+        e.preventDefault();
+
+        var form = $(this).parents('form');
+
+        $.ajax({
+            url: form.attr('action'),
+            method: 'post',
+            data: form.serialize(),
+            success: function (response) {
+                if (response.status) {
+                    $('#milestones').append(response.template);
+                    $('#myModal').modal('hide');
+                    toastr.success('Майлстоун успешно добавлен');
                     $('#projectPercent__'+response.percentages.project_id).text(response.percentages.project);
                 } else {
                     toastr.warning('Что-то пошло не так');

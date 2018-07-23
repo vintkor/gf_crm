@@ -27,7 +27,11 @@
                     <div class="list-group-item list-group-item-primary">
                         <div class="row">
                             <div class="col-11">{% trans 'Майлстоуны' %}</div>
-                            <div class="col-1"><a href="#" id="addMilestone"><i class="fa fa-plus add-link"></i></a></div>
+                            <div class="col-1">
+                                <a href="{% url 'project:add-milestone' %}?project_id={{ current_project.id }}" id="addMilestone">
+                                    <i class="fa fa-plus add-link"></i>
+                                </a>
+                            </div>
                         </div>
                     </div>
                     <div id="milestones">

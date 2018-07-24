@@ -85,7 +85,7 @@
                     <div id="tasks">
                         {% if has_last_visited_task %}
                             {% for task in tasks %}
-                                {% include 'project/_task-part.html' with task=task %}
+                                {% include 'project/_task-part.html' with task=task current_task=current_task %}
                             {% endfor %}
                         {% endif %}
                     </div>
@@ -93,7 +93,19 @@
             </div>
             <div class="col-4">
                 <div class="description-container" style="display: {% if has_last_visited_task %}block{% else %}none{% endif %}">
-                    <p class="list-group-item list-group-item-primary">{% trans 'Описание задачи' %}</p>
+
+                    <div class="list-group-item list-group-item-primary">
+                        <div class="row">
+                            <div class="col-9">
+                                {% trans 'Описание задачи' %}
+                            </div>
+                            <div class="col-3">
+                                <button id="task-desc" data-task="{{ current_task.id }}" class="btn btn-success btn-sm btn-block" style="padding: 1px;">
+                                    Done
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                     <div id="description">
                         {% if has_last_visited_task %}
                             <div class="card">

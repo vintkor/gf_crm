@@ -151,7 +151,7 @@ class Task(models.Model):
     title = models.CharField(verbose_name=_('Название'), max_length=250)
     description = RichTextUploadingField(verbose_name=_('Описание'), blank=True, null=True)
     collaborator = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True, verbose_name=_('Исполнитель'))
-    time = models.PositiveSmallIntegerField(verbose_name=_('Кол-во часов для выполнения'))
+    time = models.PositiveSmallIntegerField(verbose_name=_('Кол-во часов для выполнения'), blank=True, null=True)
     rate_per_hour = models.PositiveSmallIntegerField(verbose_name=_('Ставка за час (USD)'), blank=True, null=True)
     order = models.PositiveSmallIntegerField(verbose_name=_('Порядок сортировки'), default=100)
     status = models.CharField(max_length=2, verbose_name=_('Статус'), choices=STATUS_CHOICES, default=1)

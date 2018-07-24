@@ -1,4 +1,3 @@
-import datetime
 from django.template import Template, Context
 from django.http import JsonResponse, HttpResponseBadRequest
 from django.shortcuts import render
@@ -9,7 +8,8 @@ from .models import (
     Milestone,
     Module,
     Task,
-    Comment)
+    Comment,
+)
 from django.utils.translation import ugettext as _
 from .forms import (
     AddTaskForm,
@@ -359,3 +359,45 @@ class AddProjectFormView(FormView):
             'status': 1,
             'template': template,
         })
+
+
+class MakeTaskIsDoneView(View):
+
+    def post(self, request):
+        task_id = self.request.POST.get('task_id')
+
+        if task_id:
+            try:
+                task = Task.objects.get(pk=task_id)
+            except Task.DoesNotExist:
+                context = {
+                    'status': False,
+                    'message': 'Такой задачи не существует'
+                }
+                return JsonResponse(context)
+
+            task.status = 3
+            task.save(update_fields=('status',))
+
+            module = task.module
+            milestone = module.milestone
+            project = milestone.project
+
+            context = {
+                'status': True,
+                'percentages': {
+                    'project': project.get_percent(),
+                    'project_id': project.id,
+                    'milestone': milestone.get_percent(),
+                    'milestone_id': milestone.id,
+                    'module': module.get_percent(),
+                    'module_id': module.id,
+                }
+            }
+            return JsonResponse(context)
+
+        context = {
+            'status': False,
+            'message': 'Oops!'
+        }
+        return JsonResponse(context)

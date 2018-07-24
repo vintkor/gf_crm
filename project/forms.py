@@ -17,19 +17,19 @@ class AddTaskForm(forms.ModelForm):
         label=_('Заголовок задачи')
     )
     description = forms.CharField(
-        widget=forms.Textarea(attrs={'class': 'form-control'}),
+        widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
         label=_('Описание задачи')
     )
     collaborator = forms.ModelChoiceField(queryset=User.objects.all(), label=_('Исполнитель'), widget=forms.Select(
         attrs={'class': 'form-control select2'}
     ))
     time = forms.CharField(
-        widget=forms.TextInput(attrs={'class': 'form-control', 'type': 'number', 'min': '1', 'step': '1'}),
-        label=_('Время на задачу')
+        widget=forms.TextInput(attrs={'class': 'form-control', 'type': 'number', 'min': '1', 'step': '1', 'value': 1}),
+        label=_('Время на задачу'), required=False
     )
     rate_per_hour = forms.CharField(
-        widget=forms.TextInput(attrs={'class': 'form-control', 'type': 'number', 'min': '1', 'step': '1'}),
-        label=_('Ставка в USD за 1 час')
+        widget=forms.TextInput(attrs={'class': 'form-control', 'type': 'number', 'min': '1', 'step': '1', 'value': 1}),
+        label=_('Ставка в USD за 1 час'), required=False
     )
     status = forms.CharField(
         widget=forms.Select(attrs={'class': 'form-control'}, choices=STATUS_CHOICES),

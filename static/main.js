@@ -51,6 +51,7 @@ $(document).ready(function(){
         if(action == 'description') {
             var taskId = $(this).data('task');
             Cookies.set('last_visited_task', taskId);
+            $('#task-desc').attr('data-task', taskId);
         }
 
         if (action == 'tasks') {
@@ -313,6 +314,32 @@ $(document).ready(function(){
             }
         });
 
+    });
+
+    // -------------------------- Задача выполнена --------------------------
+
+    $('body').on('click', '#task-desc', function () {
+        var taskID = $(this).attr('data-task');
+        $.ajax({
+            method: 'post',
+            url: '/dashboard/projects/make-task-is-done/',
+            data: {
+                task_id: taskID
+            },
+            success: function (response) {
+                if (response.status) {
+                    toastr.success('Success');
+                    $('#modulePercent__'+response.percentages.module_id).text(response.percentages.module);
+                    $('#milestonesPercent__'+response.percentages.milestone_id).text(response.percentages.milestone);
+                    $('#projectPercent__'+response.percentages.project_id).text(response.percentages.project);
+                } else {
+                    toastr.warning('Что-то пошло не так');
+                }
+            },
+            error: function (e) {
+                console.log(e.message);
+            }
+        });
     });
 
 });

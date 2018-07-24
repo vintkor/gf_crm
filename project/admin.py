@@ -60,13 +60,14 @@ class ModuleAdmin(admin.ModelAdmin):
 
 @admin.register(Task)
 class TaskAdmin(admin.ModelAdmin):
-    list_editable = ('order',)
+    list_editable = ('order', 'status')
     save_on_top = True
     list_display = (
         'title',
         'collaborator',
         'module',
         'get_price',
+        'status',
         'order',
     )
 
